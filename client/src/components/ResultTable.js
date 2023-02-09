@@ -106,8 +106,6 @@ const ResultTable = () => {
             render: (text, student) => {
                 const color = student.result === 'Failed' ? 'text-danger' : '';
                 return <span className={color} >{student.name.toUpperCase()}</span>
-
-
             },
         },
         {

@@ -24,7 +24,7 @@ const ResultForm = () => {
             })
         }
 
-    }, [id])
+    }, [id, form])
 
     const handleSubmit = () => {
         const values = form.getFieldsValue();

@@ -1,7 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-// const apiBaseUrl = 'http://localhost:8000/api/v1';
 
 export const getResultRequest = async (keyword)=>{
     try {
@@ -52,7 +51,7 @@ export const getStudentRequest = async (id)=> {
 export const deleteStudentRequest = async (id)=> {
     try {
         const url = `${apiBaseUrl}/student/${id}`;
-        const {data} = await axios.delete(url);
+        await axios.delete(url);
         toast.success('Student delete successfully');
         return true
 
