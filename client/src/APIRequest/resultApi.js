@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-const apiBaseUrl = 'http://localhost:8000/api/v1';
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+// const apiBaseUrl = 'http://localhost:8000/api/v1';
 
 export const getResultRequest = async (keyword)=>{
     try {
