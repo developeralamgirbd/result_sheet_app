@@ -1,20 +1,38 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Col, Form, Input, InputNumber, Row} from "antd";
-import {createResultRequest} from "../APIRequest/resultApi";
-import {useNavigate} from "react-router-dom";
+import {createUpdateResultRequest, getStudentRequest} from "../APIRequest/resultApi";
+import {useNavigate, useParams} from "react-router-dom";
 
 const ResultForm = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const {id} = useParams();
+
+    useEffect(()=>{
+
+        if (id){
+            getStudentRequest(id).then(res => {
+                form.setFieldsValue({
+                    name: res.name,
+                    roleNo: res.roleNo,
+                    accountancy: res.accountancy,
+                    english: res.english,
+                    math: res.math,
+                    economics: res.economics,
+                    businessStudies: res.businessStudies,
+                })
+            })
+        }
+
+    }, [id])
 
     const handleSubmit = () => {
         const values = form.getFieldsValue();
-        createResultRequest(values).then(result => {
+        createUpdateResultRequest(values, id).then(result => {
             if (result){
                 navigate('/');
             }
         })
-
     };
 
 
@@ -29,7 +47,7 @@ const ResultForm = () => {
                     <Input />
                 </Form.Item>
                 <Form.Item label="Roll" name='roleNo'>
-                    <Input  />
+                    <Input readOnly={id} />
                 </Form.Item>
                 <Row gutter={[16, 16]}>
                     <Col>

@@ -65,8 +65,6 @@ exports.createResult = async (req, res) => {
     }
 }
 
-
-
 exports.getResults = async (req, res)=>{
     try {
         const {keyword} = req.params;
@@ -127,5 +125,74 @@ exports.getResults = async (req, res)=>{
 
     }catch (e) {
         res.json({error: e.message})
+    }
+}
+
+exports.editResult = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const student = await Student.findById(id);
+
+        res.status(200).json(student);
+
+    }catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            error: 'Server error occurred'
+        })
+    }
+}
+
+exports.updateStudent = async (req, res) => {
+    try {
+
+        const id = req.params.id;
+
+        const isStudent = await Student.findById(id);
+        if (!isStudent){
+           return res.status(404).json({
+                error: 'Not found'
+            })
+        }
+
+        const data = {
+            name: req.body.name !== '' ? req.body.name : isStudent.name,
+            roleNo: isStudent.roleNo,
+            accountancy: req.body.accountancy !== null ? req.body.accountancy : isStudent.accountancy,
+            english: req.body.english !== null ? req.body.english : isStudent.english,
+            math: req.body.math !== null ? req.body.math : isStudent.math,
+            economics: req.body.economics !== null ? req.body.economics : isStudent.economics,
+            businessStudies: req.body.businessStudies !== null ? req.body.businessStudies : isStudent.businessStudies
+        };
+        const student = await Student.findByIdAndUpdate(id, data, {new: true});
+        res.status(200).json(student);
+
+    }catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            error: 'Server error occurred'
+        })
+    }
+}
+
+exports.deleteStudent = async (req, res)=>{
+    try {
+        const id = req.params.id;
+        const isStudent = await Student.findById(id);
+        if (!isStudent){
+            return res.status(404).json({
+                error: 'Not found'
+            })
+        }
+
+        const result = await Student.findByIdAndDelete(id);
+        res.status(200).json(result);
+
+    }catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            error: 'Server error occurred'
+        })
     }
 }

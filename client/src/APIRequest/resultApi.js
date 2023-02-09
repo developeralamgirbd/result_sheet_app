@@ -14,10 +14,16 @@ export const getResultRequest = async (keyword)=>{
     }
 }
 
-export const createResultRequest = async (values)=>{
+export const createUpdateResultRequest = async (values, id)=>{
     try {
-        const url = `${apiBaseUrl}/student`;
-        await axios.post(url, values);
+        let url = `${apiBaseUrl}/student`;
+        if (!id){
+            await axios.post(url, values);
+        }else {
+            url = `${apiBaseUrl}/student/${id}`;
+            await axios.patch(url, values);
+        }
+
         toast.success('Result create successfully')
         return true
     }catch (error) {
@@ -31,3 +37,28 @@ export const createResultRequest = async (values)=>{
 
     }
 }
+
+export const getStudentRequest = async (id)=> {
+    try {
+        const url = `${apiBaseUrl}/student/${id}`;
+        const {data} = await axios.get(url);
+        return data
+    }catch (e) {
+        toast.error('Server error occurred');
+        return false
+    }
+}
+
+export const deleteStudentRequest = async (id)=> {
+    try {
+        const url = `${apiBaseUrl}/student/${id}`;
+        const {data} = await axios.delete(url);
+        toast.success('Student delete successfully');
+        return true
+
+    }catch (e) {
+        toast.error('Server error occurred');
+        return false
+    }
+}
+

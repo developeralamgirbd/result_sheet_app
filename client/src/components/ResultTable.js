@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {Badge, Col, Row, Table} from 'antd';
-import {getResultRequest} from "../APIRequest/resultApi";
+import {Badge, Button, Col, Row, Space, Table} from 'antd';
+import {deleteStudentRequest, getResultRequest} from "../APIRequest/resultApi";
 import Search from "antd/es/input/Search";
+import {useNavigate} from "react-router-dom";
 
 
 const ResultTable = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         setLoading(true)
@@ -36,6 +38,25 @@ const ResultTable = () => {
    /* const rowClassName = (record, index) => {
        return record.result === 'Failed' ? 'text-danger' :  'text-success';
     }*/
+
+    const handleEdit = (id)=>{
+        navigate('/update/'+id);
+    }
+    const handleDelete = (id)=>{
+        const isDelete = window.confirm('Are you sure delete!');
+
+        if(isDelete){
+            setLoading(true)
+            deleteStudentRequest(id).then(result => {
+                if (result){
+                    getResultRequest('0').then(res => {
+                        setLoading(false)
+                        setData(res[0]['rows']);
+                    })
+                }
+            })
+        }
+    }
 
     const grade = (value)=>{
         if (value >= 80 && value <= 100){
@@ -82,6 +103,12 @@ const ResultTable = () => {
             dataIndex: 'name',
             sorter: (a, b) => a.name.length - b.name.length,
             sortDirections: ['descend'],
+            render: (text, student) => {
+                const color = student.result === 'Failed' ? 'text-danger' : '';
+                return <span className={color} >{student.name.toUpperCase()}</span>
+
+
+            },
         },
         {
             title: 'Roll',
@@ -212,12 +239,22 @@ const ResultTable = () => {
             },
             onFilter: (value, record) => record.result.indexOf(value) === 0,
         },
+
+        {
+            title: 'Action',
+            dataIndex: '_id',
+            defaultSortOrder: 'descend',
+            render: (value) => {
+                return (
+                <Space wrap key={value}>
+                    <Button type="primary" onClick={()=>handleEdit(value)}>Edit</Button>
+                    <Button type="primary" danger onClick={()=>handleDelete(value)}>Delete</Button>
+                </Space>
+                );
+            },
+        },
+
     ];
-
-    const onChange = (pagination, filters, sorter, extra) => {
-       /* console.log('params', pagination, filters, sorter, extra);*/
-    };
-
 
 
 
@@ -243,7 +280,6 @@ const ResultTable = () => {
                 pagination={{position: ["bottomCenter"]}}
                 columns={columns}
                 dataSource={data}
-                onChange={onChange}
                 loading={loading}
             />
         </>
