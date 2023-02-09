@@ -19,7 +19,7 @@ const ResultTable = () => {
     const onSearch = (value)=>{
         setLoading(true)
         if (!value){
-            getResultRequest(value).then(res => {
+            getResultRequest('0').then(res => {
                 setLoading(false)
                 setData(res[0]['rows']);
             })
