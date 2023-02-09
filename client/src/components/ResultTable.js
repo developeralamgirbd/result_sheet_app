@@ -15,15 +15,16 @@ const ResultTable = () => {
             setData(res[0]['rows']);
         })
     }, [])
+
     const onSearch = (value)=>{
         setLoading(true)
         if (!value){
-            getResultRequest('0').then(res => {
+            getResultRequest(value).then(res => {
                 setLoading(false)
                 setData(res[0]['rows']);
             })
         }else {
-            getResultRequest(1, 5, value).then(res => {
+            getResultRequest(value).then(res => {
                 setLoading(false)
                 setData(res[0]['rows']);
             })
